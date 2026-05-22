@@ -9,6 +9,8 @@ A production-minded evaluation harness for LLM reliability and safety work: clea
 
 This repo is built to support applied AI, model evaluations, safeguards, sandboxing, red-team style probes, and AI observability conversations.
 
+![LLM Eval Workbench overview](docs/images/llm-eval-workbench-overview.png)
+
 ## Why this exists
 
 Many public LLM eval repos stop at notebooks or ad hoc prompts. This one is meant to feel closer to the shape of real evaluation infrastructure:
