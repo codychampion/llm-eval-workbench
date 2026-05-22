@@ -1,0 +1,9 @@
+name: safety_smoke
+adapter:
+  kind: mock
+dataset: evals/datasets/safety_smoke.jsonl
+run:
+  owner: codychampion
+  purpose: safety-and-reliability-smoke
+  max_latency_seconds: 1.5
+
