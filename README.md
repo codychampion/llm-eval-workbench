@@ -1,13 +1,16 @@
 # LLM Eval Workbench
 
 ![Status](https://img.shields.io/badge/status-active-16a34a)
+![Release](https://img.shields.io/badge/release-v0.1.0-1a4fd6)
 ![Python](https://img.shields.io/badge/python-3.10%2B-3776ab)
-![Focus](https://img.shields.io/badge/focus-safety%20and%20evals-7c3aed)
+![Focus](https://img.shields.io/badge/focus-model%20readiness-7c3aed)
 ![CI](https://img.shields.io/github/actions/workflow/status/codychampion/llm-eval-workbench/ci.yml?branch=main&label=ci)
 
-A production-minded evaluation harness for LLM reliability and safety work: clean Python package, reproducible configs, example datasets, model adapters, failure taxonomy, cost and latency tracking, and written reports.
+**Regulated Enterprise Model Readiness Leaderboard:** weekly evaluation of frontier and open-source models across task performance, reliability, governance behavior, groundedness, cost, and latency.
 
-This repo is built to support applied AI, model evaluations, safeguards, sandboxing, red-team style probes, and AI observability conversations.
+This repository is the public technical harness behind that direction: a clean Python package with reproducible configs, example datasets, model adapters, explicit failure taxonomy, cost and latency tracking, tests, CI, and reviewable reports.
+
+This benchmark uses benign synthetic or public-domain scenarios and does not attempt to elicit harmful operational content or bypass provider safeguards.
 
 ![LLM Eval Workbench overview](docs/images/llm-eval-workbench-overview.png)
 
@@ -26,14 +29,15 @@ Many public LLM eval repos stop at notebooks or ad hoc prompts. This one is mean
 
 ## What it evaluates
 
-The example harness focuses on a practical blend of safety and reliability checks:
+The public-safe readiness suites focus on enterprise evaluation behavior:
 
 | Dimension | Example question |
 |---|---|
-| Refusal behavior | Does the model decline clearly when a prompt requests harmful content? |
-| Instruction following | Does it include the required structured fields or evidence? |
-| Groundedness proxy | Does it avoid unsupported claims or invented steps in configured tasks? |
-| Failure taxonomy | If it fails, is the failure unsafe compliance, over-refusal, missing evidence, or instruction drift? |
+| Capability | Did the output complete the requested task? |
+| Reliability | Did it honor format, schema, and explicit instructions? |
+| Governance behavior | Did it classify risk and route decisions to human review appropriately? |
+| Groundedness | Did it remain constrained to provided evidence? |
+| Security reasoning | Did it handle prompt injection, confidential data, and access control appropriately? |
 | Operational metrics | What did the call cost, how long did it take, and how many tokens were used? |
 
 ## Repository layout
@@ -66,13 +70,23 @@ llm-eval-workbench run --config evals/configs/safety_smoke.yaml --output runs/sa
 
 The included mock adapter makes the full workflow runnable without external API keys.
 
-## Example dataset
+Run the regulated-enterprise readiness demo:
 
-`evals/datasets/safety_smoke.jsonl` includes:
+```bash
+llm-eval-workbench run \
+  --config evals/configs/regulated_readiness_demo.yaml \
+  --output runs/regulated_readiness_demo
+```
 
-- benign task-following prompts
-- prompts that should refuse
-- prompts that require constrained evidence-based answers
+## Example datasets
+
+`evals/datasets/regulated_readiness_demo.jsonl` includes benign synthetic scenarios for:
+
+- policy QA and governance classification
+- RAG groundedness and audit explanation
+- schema following
+- prompt-injection resilience
+- confidentiality and access-control reasoning
 
 Each record carries:
 
@@ -82,17 +96,9 @@ Each record carries:
 - expected refusal behavior
 - required and forbidden substrings
 
-## Example config
+`evals/datasets/safety_smoke.jsonl` remains as a smaller CI-focused behavior smoke test.
 
-The config in `evals/configs/safety_smoke.yaml` defines:
-
-- adapter choice
-- dataset path
-- evaluation name
-- run metadata
-- per-run defaults for cost estimates
-
-## Outputs
+## Evaluation artifacts
 
 Each run writes:
 
@@ -100,11 +106,19 @@ Each run writes:
 - `cases.json`
 - `report.md`
 
-These artifacts are designed to be legible in PRs, issue threads, and evaluation reviews.
+These artifacts are designed to be legible in pull requests, evaluation reviews, and model-governance discussions.
+
+Public documentation:
+
+- [Methodology](METHODOLOGY.md)
+- [Limitations](LIMITATIONS.md)
+- [Provider policy notes](PROVIDER_POLICY_NOTES.md)
+- [Example report](reports/example_report.md)
+- [Model readiness leaderboard surface](reports/model_readiness_leaderboard.md)
 
 ## Failure taxonomy
 
-The built-in taxonomy currently tracks:
+The built-in taxonomy tracks:
 
 - `unsafe_compliance`
 - `over_refusal`
@@ -123,14 +137,21 @@ The taxonomy is deliberately explicit so teams can discuss model behavior in ope
 
 The OpenAI and Anthropic adapters are intentionally thin and optional. The harness is built so adapter logic can stay small while evaluation logic stays consistent.
 
-## Written report
+## PAEF methodology connection
 
-See [reports/example_report.md](reports/example_report.md) for a compact example of how the harness summarizes safety and reliability behavior.
+PAEF introduced the atomic-evaluation pattern I use for regulated-enterprise model assessment: decompose complex governance/compliance tasks into policy-level checks, compare models and strategies, track uncertainty, and produce audit-ready diagnostics.
+
+The evaluation research compares microagent-based atomic policy checks with monolithic LLM auditing across 193 service contracts and 7,913 labeled policy checks. See the [PAEF preprint](https://doi.org/10.5281/zenodo.19848867).
+
+## Links
+
+- Project page: [codychampion.bitsandbeakers.com/projects/llm-eval-workbench](https://codychampion.bitsandbeakers.com/projects/llm-eval-workbench)
+- PAEF research page: [codychampion.bitsandbeakers.com/research/paef-contract-compliance](https://codychampion.bitsandbeakers.com/research/paef-contract-compliance)
 
 ## Roadmap
 
-- add pairwise judge-based scoring
-- add retrieval-grounded eval cases
+- publish initial provider-backed model-readiness comparison
+- add calibrated rubric scoring beyond transparent string checks
 - add sandboxed tool-use traces
 - add per-model trend comparison across runs
 - add dataset versioning and schema validation

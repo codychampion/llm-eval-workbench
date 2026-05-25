@@ -1,0 +1,8 @@
+name: regulated_enterprise_readiness_demo
+adapter:
+  kind: mock
+dataset: evals/datasets/regulated_readiness_demo.jsonl
+run:
+  owner: codychampion
+  purpose: public-safe-regulated-enterprise-readiness-demo
+  max_latency_seconds: 1.5
